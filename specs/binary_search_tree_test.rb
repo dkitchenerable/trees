@@ -57,6 +57,20 @@ describe BinarySearchTree do
       expect(@tree.root.key).to eq(3)
       expect(@tree.root.left.key).to eq(1)
     end
+
+    it "a match with two children and height greater than 2" do
+      tree = BinarySearchTree.new
+      tree.put(4, "n1")
+      tree.put(1, "n2")
+      tree.put(2, "n3")
+      tree.put(3, "n4")
+      tree.put(6, "n6")
+      tree.put(5, "n5")
+      tree.put(7, "n7")
+      tree.delete(4)
+      expect(tree.root.key).to eq(5)
+      expect(tree.root.left.key).to eq(1)
+    end
   end
 
   context "#put" do

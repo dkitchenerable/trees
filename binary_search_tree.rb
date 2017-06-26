@@ -109,7 +109,7 @@ class BinarySearchTree
   # return tree with node deleted
   def del_min(node)
     return node.right if node.left.nil?
-    node.left = deleteMin(node.left)
+    node.left = del_min(node.left)
     return node
   end
 end
