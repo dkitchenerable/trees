@@ -18,12 +18,17 @@ class RedBlackNode
     !@red
   end
 
-  def set_black
+  def mark_black
     @red = false
   end
 
-  def set_red
+  def mark_red
     @red = true
+  end
+
+  # helper for printing purposes
+  def color
+    @red ? "R" : "B"
   end
 
 end
