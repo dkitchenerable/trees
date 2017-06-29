@@ -78,5 +78,23 @@ describe RedBlackTree do
         expect(new_node.parent.parent.right.is_black?).to eq(true)
       end
     end
+
+    context "case 4: node is right of grandparent left child" do
+      before(:each) do
+        @tree.insert(4, "root")
+        @tree.insert(1, "left child")
+        @tree.insert(5, "right child")
+        @tree.insert(-1, "left child left")
+        @tree.insert(2, "left child right")
+        expect(@tree.root.left.value).to eq("left child")
+        expect(@tree.root.right.value).to eq("right child")
+      end
+
+      it "new node is in proper spot" do
+        @tree.insert(0, "new")
+        @tree.print
+      end
+
+    end
   end
 end

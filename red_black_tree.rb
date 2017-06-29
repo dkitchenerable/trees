@@ -3,6 +3,12 @@ require_relative 'red_black_node.rb'
 # a red black tree implementation
 # heavy influence from c implementation on https://en.wikipedia.org/wiki/Red-black_tree
 # RB PROPERTIES
+# 1. node is either red or black
+# 2. root is black
+# 3. all leaves are black
+# 4. all red children are black
+# 5. every path from a given node to leave, contains the 
+# same number of black nodes
 class RedBlackTree
   attr_accessor :root
 
@@ -26,7 +32,21 @@ class RedBlackTree
     @root = insert_recursive(@root, key, value)
   end
 
+  # simple std out print function with colors
+  def print(order="IN")
+    print_recursive(@root, order)
+  end
+
   private
+
+  def print_recursive(node, order)
+    return if node == nil
+    p "key:#{node.key} color:#{node.color} parent key:#{node.parent ? node.parent.key : node.parent}" if order == "PRE"
+    print_recursive(node.left, order)
+    p "key:#{node.key} color:#{node.color} parent key:#{node.parent ? node.parent.key : node.parent}" if order == "IN"
+    print_recursive(node.right, order)
+    p "key:#{node.key} color:#{node.color} parent key:#{node.parent ? node.parent.key : node.parent}" if order == "POST"
+  end
 
   def insert_recursive(node, key, value, parent=nil)
     # new node
@@ -62,26 +82,56 @@ class RedBlackTree
     elsif node.parent.is_black? # case 2
       return
     elsif uncle(node) && uncle(node).is_red? # case 3
-      node.parent.mark_black
-      uncle(node).mark_black
-      grandparent = grandparent(node)
-      grandparent.mark_red
-      rebalance(grandparent)
-    else #check case 4 and 5
+      rebalance_case_3(node)
+    else #check case 4
       g = grandparent(node)
-      if g.left.right == node || g.right.left == node
-        return
-      else
-        return
+      if node == node.parent.right && node.parent == g.left
+        p "gots to be in here"
+        rotate_left(node.parent)
+        n = n.left
+      elsif node == node.parent.left && node.parent == g.right
+        rotate_right(node.parent)
+        n = n.right
       end
-      end
+      rebalance_case_5(node)
     end
   end
 
-  def self.rotate_right
+  def rebalance_case_3(node)
+    node.parent.mark_black
+    uncle(node).mark_black
+    grandparent = grandparent(node)
+    grandparent.mark_red
+    rebalance(grandparent)
   end
 
-  def self.rotate_left
+  def rebalance_case_5(node)
+    g = grandparent(node)
+    node.parent.mark_black
+    g.mark_red
+    if (node == node.parent.left)
+      rotate_right(g)
+    else
+      rotate_left(g)
+    end
+  end
+
+  def rotate_right(node)
+    g = grandparent(node)
+    saved_parent = g.right
+    saved_right = node.right
+    g.right = node
+    node.right = saved_parent
+    saved_parent.left = saved_right
+  end
+
+  def rotate_left(node)
+    g = grandparent(node)
+    saved_parent = g.left
+    saved_left = n.left
+    g.left = node
+    node.left = saved_p
+    saved_p.right = saved_left
   end
 
   def grandparent(node)
